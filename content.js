@@ -43,3 +43,22 @@ function createGhostNode(bounds) {
   
   return ghost;
 }
+
+function checkCollision(rect1, rect2) {
+  const r1Left = rect1.left;
+  const r1Right = rect1.left + rect1.width;
+  const r1Top = rect1.top;
+  const r1Bottom = rect1.top + rect1.height;
+
+  const r2Left = rect2.left;
+  const r2Right = rect2.left + rect2.width;
+  const r2Top = rect2.top;
+  const r2Bottom = rect2.top + rect2.height;
+
+  return !(
+    r1Right < r2Left ||
+    r1Left > r2Right ||
+    r1Bottom < r2Top ||
+    r1Top > r2Bottom
+  );
+}

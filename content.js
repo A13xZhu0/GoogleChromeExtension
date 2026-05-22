@@ -62,3 +62,12 @@ function checkCollision(rect1, rect2) {
     r1Top > r2Bottom
   );
 }
+
+function hideElement(el, useOpacity = false) {
+  if (useOpacity) {
+    el.style.setProperty("opacity", "0", "important");
+    el.style.setProperty("pointer-events", "none", "important");
+  } else {
+    el.style.setProperty("visibility", "hidden", "important");
+  }
+}

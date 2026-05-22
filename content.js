@@ -17,6 +17,29 @@ function getElementBounds(el) {
     width: rect.width,
     height: rect.height,
     color: style.color,
-    background: style.background
+    background: style.background,
+    html: el.innerHTML,
+    text: el.textContent
   };
+}
+
+function createGhostNode(bounds) {
+  const ghost = document.createElement("div");
+  
+  if (bounds.html) {
+    ghost.innerHTML = bounds.html;
+  } else if (bounds.text) {
+    ghost.textContent = bounds.text;
+  }
+  
+  ghost.style.position = "absolute";
+  ghost.style.top = `${bounds.top}px`;
+  ghost.style.left = `${bounds.left}px`;
+  ghost.style.width = `${bounds.width}px`;
+  ghost.style.height = `${bounds.height}px`;
+  ghost.style.color = bounds.color;
+  ghost.style.background = bounds.background;
+  ghost.style.boxSizing = "border-box";
+  
+  return ghost;
 }

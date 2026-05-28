@@ -1,20 +1,31 @@
 {
   "manifest_version": 3,
-  "name": "Minimal Extension",
+  "name": "TabHavoc Cat",
   "version": "1.0",
-  "description": "Minimal MV3 extension.",
+  "description": "A cat that wreaks havoc on your tabs if you're inactive.",
   "permissions": [
     "activeTab",
     "storage",
-    "scripting"
+    "scripting",
+    "alarms",
+    "tabs"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background/background.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": [
+        "src/content/interaction.js",
+        "src/content/content.js"
+      ],
+      "css": [
+        "src/content/content.css"
+      ]
     }
-  ]
+  ],
+  "action": {
+    "default_popup": "src/popup/popup.html"
+  }
 }

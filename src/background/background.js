@@ -98,6 +98,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 });
 
 // Installation and Initialization listener
+/*
 chrome.runtime.onInstalled.addListener(() => {
   console.log("Extension installed successfully.");
   
@@ -108,6 +109,30 @@ chrome.runtime.onInstalled.addListener(() => {
     }
     if (data.lastInteractionTimestamp === undefined) {
       defaults.lastInteractionTimestamp = Date.now();
+    }
+    if (Object.keys(defaults).length > 0) {
+      chrome.storage.local.set(defaults);
+    }
+  });
+
+  refreshCatTrackingAlarm();
+});
+*/
+
+chrome.runtime.onInstalled.addListener(() => {
+  console.log("Extension installed successfully.");
+  
+  chrome.storage.local.get(["inactivityThresholdMinutes", "lastInteractionTimestamp", "currentCatState"], (data) => {
+    const defaults = {};
+    if (data.inactivityThresholdMinutes === undefined) {
+      defaults.inactivityThresholdMinutes = 30; // Updated to spec default of 30
+    }
+    if (data.lastInteractionTimestamp === undefined) {
+      defaults.lastInteractionTimestamp = Date.now();
+    }
+    // FIX: Add the missing state required by the spec
+    if (data.currentCatState === undefined) {
+      defaults.currentCatState = "IDLE"; 
     }
     if (Object.keys(defaults).length > 0) {
       chrome.storage.local.set(defaults);

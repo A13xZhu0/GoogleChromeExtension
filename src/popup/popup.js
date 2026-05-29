@@ -1,5 +1,6 @@
 // popup.js - TabHavoc Cat user threshold settings controls
 
+/*
 document.addEventListener("DOMContentLoaded", async () => {
   const thresholdInput = document.getElementById("threshold");
   const saveBtn = document.getElementById("save");
@@ -32,6 +33,36 @@ document.addEventListener("DOMContentLoaded", async () => {
       } catch (error) {
         console.error("Error saving configuration:", error);
       }
+    }
+  });
+});
+*/
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const intervalSelect = document.getElementById("havoc-interval-select");
+  const feedBtn = document.getElementById("feed-element-btn");
+
+  // Load configured thresholds
+  const data = await chrome.storage.local.get("inactivityThresholdMinutes");
+  if (data.inactivityThresholdMinutes) {
+    intervalSelect.value = data.inactivityThresholdMinutes;
+  }
+
+  // Update background controls on threshold change
+  intervalSelect.addEventListener("change", async () => {
+    const selectedValue = parseInt(intervalSelect.value, 10);
+    await chrome.storage.local.set({ inactivityThresholdMinutes: selectedValue });
+    
+    // Message background worker directly to enforce immediate update checks
+    chrome.runtime.sendMessage({ action: "REFRESH_ALARM" });
+  });
+
+  // Wire action button to notify active webpage layout context
+  feedBtn.addEventListener("click", async () => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tab?.id) {
+      chrome.tabs.sendMessage(tab.id, { action: "TRIGGER_FEEDING_SELECTION" });
+      window.close(); // Close popup context to let user select element
     }
   });
 });
